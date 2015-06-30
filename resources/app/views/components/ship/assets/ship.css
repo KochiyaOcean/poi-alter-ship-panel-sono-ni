@@ -40,15 +40,15 @@
   background-color: inherit;
 }
 #ShipView .hp-progress .progress {
-  height: 12px;
+  height: 10px;
 }
 #ShipView .hp-progress .progress .progress-bar {
   font-size: 13px;
   line-height: 4px;
 }
 #ShipView .material-data {
-  font-size: 11px;
-  line-height: 11px;
+  font-size: 10px;
+  line-height: 10px;
 }
 #ShipView .hp-progress .progress {
   position: relative;
@@ -68,7 +68,7 @@
   color: #fff;
 }
 #ShipView .material-progress .progress {
-  margin-bottom: 3px;
+  margin-bottom: 2px;
   height: 5px;
   margin-right: 15px;
   position: relative;
