@@ -1,7 +1,7 @@
 {relative, join} = require 'path-extra'
 {_, $, $$, React, ReactBootstrap, ROOT, resolveTime, toggleModal, notify} = window
 {$ships, $shipTypes, _ships} = window
-{Button, ButtonGroup, Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert} = ReactBootstrap
+{Button, ButtonGroup, Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row} = ReactBootstrap
 {Slotitems} = require './parts'
 inBattle = [false, false, false, false]
 getStyle = (state) ->
