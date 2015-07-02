@@ -1,7 +1,7 @@
 {relative, join} = require 'path-extra'
 {_, $, $$, React, ReactBootstrap, ROOT, resolveTime, toggleModal, notify} = window
 {$ships, $shipTypes, _ships} = window
-{Button, ButtonGroup, Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Row, Alert} = ReactBootstrap
+{Button, ButtonGroup, Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert} = ReactBootstrap
 {Slotitems} = require './parts'
 inBattle = [false, false, false, false]
 getStyle = (state) ->
@@ -40,6 +40,8 @@ getCondStyle = (cond) ->
     color: '#DD514C'
   else if cond < 30
     color: '#F37B1D'
+  else if cond < 40
+    color: '#FFC880'
   else
     null
 getDeckState = (deck, ndocks) ->
@@ -141,7 +143,7 @@ module.exports =
         activeDeck: idx
     handleResponse: (e) ->
       {method, path, body, postBody} = e.detail
-      {names, decks, ndocks} = @state
+      {names, ndocks} = @state
       flag = true
       switch path
         when '/kcsapi/api_port/port'
@@ -149,65 +151,12 @@ module.exports =
             e.api_name
           ndocks = body.api_ndock.map (e) ->
             e.api_ship_id
-          decks = Object.clone body.api_deck_port
           inBattle = [false, false, false, false]
-        when '/kcsapi/api_req_hensei/change'
-          {decks} = @state
-          deckId = parseInt(postBody.api_id) - 1
-          idx = parseInt(postBody.api_ship_idx)
-          curId = decks[deckId].api_ship[idx]
-          shipId = parseInt(postBody.api_ship_id)
-          # Remove all
-          if idx == -1
-            decks[deckId].api_ship[i] = -1 for i in [1..5]
-          # Empty -> One
-          else if curId == -1
-            decks[deckId].api_ship[idx] = shipId
-          # One -> Empty
-          else if shipId == -1
-            for i in [idx..4]
-              decks[deckId].api_ship[i] = decks[deckId].api_ship[i + 1]
-            decks[deckId].api_ship[5] = -1
-          else
-            [x, y] = [-1, -1]
-            for deck, i in decks
-              for ship, j in deck.api_ship
-                if ship == shipId
-                  [x, y] = [i, j]
-                  break
-            decks[deckId].api_ship[idx] = shipId
-            # Exchange
-            decks[x].api_ship[y] = curId if x != -1 && y != -1
-        when '/kcsapi/api_req_hokyu/charge'
-          {decks} = @state
-        when '/kcsapi/api_get_member/deck'
-          {decks} = @state
-          decks[deck.api_id - 1] = deck for deck in body
-        when '/kcsapi/api_get_member/ship_deck'
-          {decks} = @state
-          decks[deck.api_id - 1] = deck for deck in body.api_deck_data
-        when '/kcsapi/api_get_member/ship3'
-          {decks} = @state
-          decks[deck.api_id - 1] = deck for deck in body.api_deck_data
+        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship'
+          true
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
           inBattle[deckId] = true
-        when '/kcsapi/api_req_kousyou/destroyship'
-          {decks} = @state
-          removeId = parseInt(postBody.api_ship_id)
-          [x, y] = [-1, -1]
-          for deck, i in decks
-            for shipId, j in deck.api_ship
-              if shipId == removeId
-                [x, y] = [i, j]
-                break
-          if x != -1 && y != -1
-            if y == 5
-              decks[x].api_ship[y] = -1
-            else
-              for idx in [y..4]
-                decks[x].api_ship[idx] = decks[x].api_ship[idx + 1]
-              decks[x].api_ship[5] = -1
         when '/kcsapi/api_req_map/next'
           {decks, states} = @state
           {$ships, _ships} = window
@@ -222,8 +171,7 @@ module.exports =
         else
           flag = false
       return unless flag
-      # Global decks for plugins!
-      window._decks = Object.clone decks
+      decks = window._decks
       states = decks.map (deck) ->
         getDeckState deck, ndocks
       messages = decks.map (deck) ->
@@ -261,7 +209,9 @@ module.exports =
             <Button key={i} bsSize="small"
                             bsStyle={getStyle @state.states[i]}
                             onClick={@handleClick.bind(this, i)}
-                            className={if @state.activeDeck == i then 'active' else ''}>{@state.names[i]}</Button>
+                            className={if @state.activeDeck == i then 'active' else ''}>
+              {@state.names[i]}
+            </Button>
         }
         </ButtonGroup>
         {
