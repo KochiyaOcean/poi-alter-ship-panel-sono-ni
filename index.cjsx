@@ -4,6 +4,7 @@
 {Button, ButtonGroup, Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row} = ReactBootstrap
 {Slotitems} = require './parts'
 inBattle = [false, false, false, false]
+timeDelta = [0, 0, 0, 0]
 getStyle = (state) ->
   if state in [0..5]
     # 0: Cond >= 40, Supplied, Repaired, In port
