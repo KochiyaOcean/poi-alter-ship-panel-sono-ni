@@ -253,12 +253,12 @@ module.exports =
                     shipType = $shipTypes[shipInfo.api_stype].api_name
                     [
                       <tr key={j * 2}>
-                        <td width="17%">{shipInfo.api_name}</td>
+                        <td width="16%">{shipInfo.api_name}</td>
                         <td width="17%">Lv. {ship.api_lv}</td>
-                        <td width="24%" className="hp-data">
-                          <div>HP {"#{ship.api_nowhp} / #{ship.api_maxhp}"}</div>
+                        <td width="22%" className="hp-data">
+                          <div><hp>HP</hp> {"#{ship.api_nowhp} / #{ship.api_maxhp}"}</div>
                         </td>
-                        <td width="14%" className="material-progress">
+                        <td width="13%" className="material-progress">
                          <Grid>
                             <Row>
                               <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
@@ -270,8 +270,8 @@ module.exports =
                             </Row>
                           </Grid>
                         </td>
-                        <td  width="28%">
-                          <Slotitems data={ship.api_slot} />
+                        <td  width="32%">
+                          <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
                         </td>
                       </tr>
                       <tr key={j * 2 + 1}>
