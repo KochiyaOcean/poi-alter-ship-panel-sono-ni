@@ -1,3 +1,4 @@
+{relative, join} = require 'path-extra'
 {$, $$, _, React, ReactBootstrap, resolveTime, notify} = window
 {Table, ProgressBar, OverlayTrigger, Tooltip, Grid, Col, Alert, Row} = ReactBootstrap
 
@@ -122,6 +123,7 @@ TopAlert = React.createClass
   countdown: 0
   timeDelta: 0
   cond: 0
+  isMount: false
   setAlert: ->
     decks = window._decks
     @messages = getDeckMessage decks[@props.deckIndex]
@@ -142,14 +144,16 @@ TopAlert = React.createClass
       flag = false
       @timeDelta += 1
       # Use DOM operation instead of React for performance
-      $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@countdown - @timeDelta)
+      if @isMount
+        $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@countdown - @timeDelta)
       if @countdown == @timeDelta and @props.deckState < 4
         notify "#{@props.names} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
     @interval = clearInterval @interval if flag
   componentWillMount: ->
+    @componentId = Math.ceil(Date.now() * Math.random())
     @setAlert()
   componentDidMount: ->
-    @componentId = Math.ceil(Date.now() * Math.random())
+    @isMount = true
   componentWillUnmount: ->
     @interval = clearInterval @interval if @interval?
   render: ->
