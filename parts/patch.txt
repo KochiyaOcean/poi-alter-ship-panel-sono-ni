@@ -1,0 +1,33 @@
+            [
+              <tr key={j * 2}>
+                <td width="16%">{shipInfo.api_name}</td>
+                <td width="17%">Lv. {ship.api_lv}</td>
+                <td width="22%" className="hp-data">
+                  <div><hp>HP</hp> {"#{ship.api_nowhp} / #{ship.api_maxhp}"}</div>
+                </td>
+                <td width="13%" className="material-progress">
+                 <Grid>
+                    <Row>
+                      <ProgressBar bsStyle={getMaterialStyle ship.api_fuel / shipInfo.api_fuel_max * 100}
+                                   now={ship.api_fuel / shipInfo.api_fuel_max * 100} />
+                    </Row>
+                    <Row>
+                      <ProgressBar bsStyle={getMaterialStyle ship.api_bull / shipInfo.api_bull_max * 100}
+                                   now={ship.api_bull / shipInfo.api_bull_max * 100}/>
+                    </Row>
+                  </Grid>
+                </td>
+                <td  width="32%">
+                  <Slotitems data={ship.api_slot} onslot={ship.api_onslot} maxeq={ship.api_maxeq} />
+                </td>
+              </tr>
+              <tr key={j * 2 + 1}>
+                <td>{shipType}</td>
+                <td>Next. {ship.api_exp[1]}</td>
+                <td colSpan="2" className="hp-progress">
+                  <ProgressBar bsStyle={getHpStyle ship.api_nowhp / ship.api_maxhp * 100}
+                               now={ship.api_nowhp / ship.api_maxhp * 100} />
+                </td>
+                <td style={getCondStyle ship.api_cond}>Cond. {ship.api_cond}</td>
+              </tr>
+            ]
